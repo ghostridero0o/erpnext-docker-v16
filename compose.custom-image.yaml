@@ -1,0 +1,32 @@
+services:
+  backend:
+    image: erpnext-custom:16-staging-ready
+    pull_policy: never
+
+  configurator:
+    image: erpnext-custom:16-staging-ready
+    pull_policy: never
+
+  create-site:
+    image: erpnext-custom:16-staging-ready
+    pull_policy: never
+
+  frontend:
+    image: erpnext-custom:16-staging-ready
+    pull_policy: never
+
+  queue-long:
+    image: erpnext-custom:16-staging-ready
+    pull_policy: never
+
+  queue-short:
+    image: erpnext-custom:16-staging-ready
+    pull_policy: never
+
+  scheduler:
+    image: erpnext-custom:16-staging-ready
+    pull_policy: never
+
+  websocket:
+    image: erpnext-custom:16-staging-ready
+    pull_policy: never

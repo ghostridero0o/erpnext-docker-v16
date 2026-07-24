@@ -1,0 +1,34 @@
+[
+  {
+    "url": "https://github.com/frappe/erpnext.git",
+    "branch": "version-16"
+  },
+  {
+    "url": "https://github.com/frappe/hrms.git",
+    "branch": "version-16"
+  },
+  {
+    "url": "https://github.com/frappe/crm.git",
+    "branch": "main"
+  },
+  {
+    "url": "https://github.com/frappe/print_designer.git",
+    "branch": "main"
+  },
+  {
+    "url": "https://github.com/The-Commit-Company/raven.git",
+    "branch": "main"
+  },
+  {
+    "url": "https://github.com/frappe/insights.git",
+    "branch": "version-3"
+  },
+  {
+    "url": "https://github.com/frappe/gameplan.git",
+    "branch": "main"
+  },
+  {
+    "url": "https://github.com/frappe/wiki.git",
+    "branch": "master"
+  }
+]

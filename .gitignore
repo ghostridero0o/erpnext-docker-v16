@@ -1,34 +1,72 @@
-# Environment Variables
-.env
+# ===========================
+# ERPNext / Frappe Docker
+# ===========================
 
-# mounted volume
-sites
-
-development/*
-!development/README.md
-!development/installer.py
-!development/apps-example.json
-!development/vscode-example/
-
-# Pycharm
-.idea
-
-# VS Code
-.vscode/**
-!.vscode/extensions.json
-
-# VS Code devcontainer
-.devcontainer
-*.code-workspace
+# Git
+.git
 
 # Python
-*.pyc
-__pycache__
-venv
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
 
-# NodeJS
-node_modules
+# Logs
+*.log
+logs/
 
-# VitePress
-**/.vitepress/dist
-**/.vitepress/cache
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# VSCode / JetBrains
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Runtime
+pids/
+*.pid
+
+# Docker volumes
+volumes/
+
+# Database dumps
+*.sql
+*.sql.gz
+*.dump
+backup/
+backups/
+
+# ERPNext sites
+sites/assets/
+sites/*/private/files/
+sites/*/public/files/
+sites/*/locks/
+sites/*/logs/
+sites/*/backups/
+
+# Cache
+.cache/
+.pytest_cache/
+
+# Build
+dist/
+build/
+
+# Temporary
+tmp/
+temp/
+
+# Docker override
+docker-compose.override.yml
