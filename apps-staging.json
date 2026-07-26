@@ -37,7 +37,7 @@
   },
   {
     "url": "https://github.com/ghostridero0o/my_custom_app.git",
-    "branch": "develop"
+    "branch": "version-16"
   },
   {
     "url": "https://github.com/ghostridero0o/furnicost.git",
@@ -45,6 +45,6 @@
   },
   {
     "url": "https://github.com/ghostridero0o/frappe_crm_messenger.git",
-    "branch": "main"
+    "branch": "version-16"
   }
 ]
