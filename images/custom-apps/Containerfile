@@ -1,0 +1,89 @@
+# syntax=docker/dockerfile:1.7
+
+# This image is intentionally small: it replaces only the custom app sources
+# on top of an existing Frappe/ERPNext image. It does not run bench init or
+# reinstall the JavaScript dependencies of core apps such as Raven.
+ARG BASE_IMAGE=erpnext-core:16-ready
+
+FROM ${BASE_IMAGE} AS custom-app-sources
+
+ARG CUSTOM_APPS_CACHE_BUST=""
+
+USER frappe
+
+RUN --mount=type=secret,id=apps_json,target=/opt/frappe/apps-custom.json,uid=1000,gid=1000 \
+  : "${CUSTOM_APPS_CACHE_BUST}" && \
+  test -s /opt/frappe/apps-custom.json && \
+  rm -rf /tmp/custom-apps /tmp/custom-apps-revisions.txt && \
+  mkdir -p /tmp/custom-apps && \
+  jq -r '.[] | [.url, .branch] | @tsv' /opt/frappe/apps-custom.json | \
+  while IFS="$(printf '\t')" read -r app_url app_branch; do \
+    app_name="$(basename "${app_url%.git}")"; \
+    case "${app_name}" in \
+      my_custom_app|frappe_crm_messenger|furnicost) ;; \
+      *) echo "Unsupported custom app: ${app_name}" >&2; exit 1 ;; \
+    esac; \
+    git clone \
+      --depth 1 \
+      --branch "${app_branch}" \
+      "${app_url}" \
+      "/tmp/custom-apps/${app_name}"; \
+    printf '%s %s %s\n' \
+      "${app_name}" \
+      "$(git -C "/tmp/custom-apps/${app_name}" rev-parse HEAD)" \
+      "${app_branch}" \
+      >> /tmp/custom-apps-revisions.txt; \
+  done && \
+  find /tmp/custom-apps -mindepth 2 -path '*/.git' -prune -exec rm -rf '{}' +
+
+FROM ${BASE_IMAGE} AS backend
+
+USER root
+
+RUN rm -rf \
+  /home/frappe/frappe-bench/apps/my_custom_app \
+  /home/frappe/frappe-bench/apps/frappe_crm_messenger \
+  /home/frappe/frappe-bench/apps/furnicost
+
+COPY --from=custom-app-sources --chown=frappe:frappe \
+  /tmp/custom-apps/ \
+  /home/frappe/frappe-bench/apps/
+
+COPY --from=custom-app-sources --chown=frappe:frappe \
+  /tmp/custom-apps-revisions.txt \
+  /opt/frappe/custom-apps-revisions.txt
+
+USER frappe
+
+WORKDIR /home/frappe/frappe-bench
+
+# All three apps currently have Python-only package dependencies. uv installs
+# only their editable metadata; it does not resolve or rebuild core app deps.
+RUN UV_CACHE_DIR=/tmp/uv-cache uv pip install \
+  --python env/bin/python \
+  --no-deps \
+  --editable apps/my_custom_app \
+  --editable apps/frappe_crm_messenger \
+  --editable apps/furnicost && \
+  rm -rf /tmp/uv-cache && \
+  ln -sfn \
+    /home/frappe/frappe-bench/apps/my_custom_app/my_custom_app/public \
+    /home/frappe/frappe-bench/assets/my_custom_app && \
+  ln -sfn \
+    /home/frappe/frappe-bench/apps/furnicost/furnicost/public \
+    /home/frappe/frappe-bench/assets/furnicost && \
+  env/bin/python -c \
+    "import my_custom_app, frappe_crm_messenger, furnicost"
+
+# Keep the existing Frappe v16 compatibility patch when bootstrapping the
+# custom layer from an older all-in-one image.
+RUN if grep -q \
+  'from frappe.config import get_modules_from_all_apps_for_user' \
+  apps/gameplan/gameplan/api.py; then \
+    sed -i \
+      's/from frappe\.config import get_modules_from_all_apps_for_user/from frappe.utils.modules import get_modules_from_all_apps_for_user/' \
+      apps/gameplan/gameplan/api.py; \
+  fi && \
+  grep -q \
+    'from frappe.utils.modules import get_modules_from_all_apps_for_user' \
+    apps/gameplan/gameplan/api.py

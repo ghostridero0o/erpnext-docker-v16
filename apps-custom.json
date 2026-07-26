@@ -1,0 +1,14 @@
+[
+  {
+    "url": "https://github.com/ghostridero0o/my_custom_app.git",
+    "branch": "version-16"
+  },
+  {
+    "url": "https://github.com/ghostridero0o/frappe_crm_messenger.git",
+    "branch": "version-16"
+  },
+  {
+    "url": "https://github.com/ghostridero0o/furnicost.git",
+    "branch": "main"
+  }
+]
