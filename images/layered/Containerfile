@@ -27,6 +27,15 @@ RUN --mount=type=secret,id=apps_json,target=/opt/frappe/apps.json,uid=1000,gid=1
   echo "{}" > sites/common_site_config.json && \
   find apps -mindepth 1 -path "*/.git" | xargs rm -fr
 
+# Gameplan main targets a newer Frappe API location. Frappe v16 keeps this
+# helper in frappe.utils.modules, so patch and verify the import at build time.
+RUN sed -i \
+  's/from frappe\.config import get_modules_from_all_apps_for_user/from frappe.utils.modules import get_modules_from_all_apps_for_user/' \
+  /home/frappe/frappe-bench/apps/gameplan/gameplan/api.py && \
+  grep -q \
+  'from frappe.utils.modules import get_modules_from_all_apps_for_user' \
+  /home/frappe/frappe-bench/apps/gameplan/gameplan/api.py
+
 FROM ${FRAPPE_IMAGE_PREFIX}/base:${FRAPPE_BRANCH} AS backend
 
 USER frappe
