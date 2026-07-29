@@ -7,7 +7,7 @@ title: Lightweight Custom App Image
 This repository separates the ERPNext stack into two image layers:
 
 - `erpnext-core`: Frappe, ERPNext, HRMS, CRM, Raven, Insights, Gameplan,
-  Wiki, Print Designer, and Employee Self Service.
+  Wiki, Print Designer, Employee Self Service, and Offsite Backups.
 - `erpnext-custom`: `my_custom_app`, `frappe_crm_messenger`, and `furnicost`.
 
 The core image is rebuilt only when a core app or its version changes. Normal
@@ -72,7 +72,7 @@ of this custom layer.
 Rebuild `erpnext-core` when any of these change:
 
 - Frappe, ERPNext, HRMS, CRM, Raven, Insights, Gameplan, Wiki, Print Designer,
-  or Employee Self Service versions.
+  Employee Self Service, or Offsite Backups versions.
 - Python, Node, operating-system packages, or the core Containerfile.
 - A custom app adds a Python dependency that requires system build packages.
 - A custom app introduces a JavaScript bundle requiring Node/Yarn compilation.

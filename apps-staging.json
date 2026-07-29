@@ -36,6 +36,10 @@
     "branch": "version-16"
   },
   {
+    "url": "https://github.com/frappe/offsite_backups.git",
+    "branch": "develop"
+  },
+  {
     "url": "https://github.com/ghostridero0o/my_custom_app.git",
     "branch": "version-16"
   },

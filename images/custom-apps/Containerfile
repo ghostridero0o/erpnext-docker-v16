@@ -57,8 +57,8 @@ USER frappe
 
 WORKDIR /home/frappe/frappe-bench
 
-# All three apps currently have Python-only package dependencies. uv installs
-# only their editable metadata; it does not resolve or rebuild core app deps.
+# All three custom apps currently use dependencies already provided by the
+# core image, so only install their editable package metadata.
 RUN UV_CACHE_DIR=/tmp/uv-cache uv pip install \
   --python env/bin/python \
   --no-deps \
