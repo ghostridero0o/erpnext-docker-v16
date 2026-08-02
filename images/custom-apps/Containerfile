@@ -87,3 +87,34 @@ RUN if grep -q \
   grep -q \
     'from frappe.utils.modules import get_modules_from_all_apps_for_user' \
     apps/gameplan/gameplan/api.py
+
+# Frappe v16 has the Drive OAuth scope but does not register a callback or
+# Google API service for it. offsite_backups still uses that integration, so
+# register both entries in the custom layer. This keeps the core image reusable.
+RUN google_oauth_file=apps/frappe/frappe/integrations/google_oauth.py && \
+  if ! grep -q \
+    '"drive": "offsite_backups.offsite_backups.doctype.google_drive.google_drive.authorize_access"' \
+    "${google_oauth_file}"; then \
+    grep -q \
+      '"contacts": "frappe.integrations.doctype.google_contacts.google_contacts.authorize_access",' \
+      "${google_oauth_file}" && \
+    sed -i \
+      '/"contacts": "frappe.integrations.doctype.google_contacts.google_contacts.authorize_access",/a\    "drive": "offsite_backups.offsite_backups.doctype.google_drive.google_drive.authorize_access",' \
+      "${google_oauth_file}"; \
+  fi && \
+  if ! grep -q \
+    '"drive": ("drive", "v3")' \
+    "${google_oauth_file}"; then \
+    grep -q \
+      '"indexing": ("indexing", "v3"),' \
+      "${google_oauth_file}" && \
+    sed -i \
+      '/"indexing": ("indexing", "v3"),/a\    "drive": ("drive", "v3"),' \
+      "${google_oauth_file}"; \
+  fi && \
+  grep -q \
+    '"drive": "offsite_backups.offsite_backups.doctype.google_drive.google_drive.authorize_access"' \
+    "${google_oauth_file}" && \
+  grep -q \
+    '"drive": ("drive", "v3")' \
+    "${google_oauth_file}"

@@ -14,6 +14,8 @@ services:
   frontend:
     image: ${CUSTOM_IMAGE:-erpnext-custom}:${CUSTOM_TAG:-16-staging-ready}
     pull_policy: never
+    volumes:
+      - ./resources/core/nginx/nginx-template.conf:/templates/nginx/frappe.conf.template:ro
 
   queue-long:
     image: ${CUSTOM_IMAGE:-erpnext-custom}:${CUSTOM_TAG:-16-staging-ready}
