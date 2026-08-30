@@ -136,6 +136,10 @@ services:
 
   queue-long:
     image: frappe/erpnext:v16.29.0
+    # Disabled by default. Enable explicitly with --profile parallel-workers
+    # only when concurrent background processing is required.
+    profiles:
+      - parallel-workers
     networks:
       - frappe_network
     deploy:
@@ -167,7 +171,9 @@ services:
       - bench
       - worker
       - --queue
-      - short,default
+      # Serialize all background queues through one worker to avoid concurrent
+      # updates to shared records such as Raven Channel.
+      - short,default,long
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - logs:/home/frappe/frappe-bench/logs
