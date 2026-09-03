@@ -83,17 +83,11 @@ services:
   queue-short:
     <<: *backend_defaults
     platform: linux/amd64
-    # Serialize background jobs through one worker to avoid concurrent updates
-    # to shared records such as Raven Channel.
-    command: bench worker --queue short,default,long
+    command: bench worker --queue short,default
 
   queue-long:
     <<: *backend_defaults
     platform: linux/amd64
-    # Disabled by default. Enable explicitly with --profile parallel-workers
-    # only when concurrent background processing is required.
-    profiles:
-      - parallel-workers
     command: bench worker --queue long,default,short
 
   scheduler:
