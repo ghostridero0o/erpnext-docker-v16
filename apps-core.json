@@ -16,8 +16,8 @@
     "branch": "main"
   },
   {
-    "url": "https://github.com/The-Commit-Company/raven.git",
-    "branch": "main"
+    "url": "https://github.com/frappe/raven.git",
+    "branch": "v3.0.0"
   },
   {
     "url": "https://github.com/frappe/insights.git",
