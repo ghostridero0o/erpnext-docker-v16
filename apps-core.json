@@ -5,7 +5,7 @@
   },
   {
     "url": "https://github.com/frappe/hrms.git",
-    "branch": "version-16"
+    "branch": "v16.20.1"
   },
   {
     "url": "https://github.com/frappe/crm.git",
