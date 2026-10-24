@@ -2,6 +2,8 @@ services:
   backend:
     image: ${CUSTOM_IMAGE:-erpnext-custom}:${CUSTOM_TAG:-16-staging-ready}
     pull_policy: never
+    environment:
+      FORWARDED_ALLOW_IPS: "*"
 
   configurator:
     image: ${CUSTOM_IMAGE:-erpnext-custom}:${CUSTOM_TAG:-16-staging-ready}
